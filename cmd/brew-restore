@@ -1,0 +1,17 @@
+#!/bin/bash
+
+HOMEBREW_STATE=${1:-$HOMEBREW_STATE}         # Set to ARG1 if ARG1
+if [[ ! -f ${HOMEBREW_STATE:=$HOME/.homebrew.state} ]]; then
+    echo Homebrew Statefile: $HOMEBREW_STATE does not exist.
+    echo
+    echo USAGE: brew restore [homebrew.state]
+    echo
+    echo If statefile is omitted, \'$HOMEBREW_STATE\' will be used by default.
+    echo You can change this by setting HOMEBREW_STATE
+    echo
+    exit
+fi
+
+while read PACKAGE; do
+    [[ ! -z $PACKAGE ]] && brew install $PACKAGE
+done <"$HOMEBREW_STATE"
