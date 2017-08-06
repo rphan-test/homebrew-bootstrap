@@ -5,6 +5,8 @@ A brew tap designed to make it easy to bootstrap a new mac.
 Don't use this yet.
 
 # Installation
+_You will be prompted for passwords_
+
 ```
 curl https://raw.githubusercontent.com/rphan/homebrew-bootstrap/master/bootstrap.sh | bash
 ```

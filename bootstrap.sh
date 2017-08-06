@@ -16,7 +16,6 @@ if ! brew tap $BOOTSTRAP; then
 fi
 
 # Bootstrapping circular dependency
-[ $SKIP_MAS ]] && brew install mas
 if [ -z ${SKIP_MAS+x} ]; then
   brew install mas
 fi
@@ -27,13 +26,12 @@ source "$HOMESHICK_DIR/homeshick.sh"
 
 DOTFILES=$U/dotfiles
 if [ ! -d $HOME/.homesick/repos/dotfiles ]; then
-    if ! homeshick clone $DOTFILES; then
+    if ! yes | homeshick clone $DOTFILES; then
         echo "Please fork rphan/dotfiles to $DOTFILES"
         echo 'You can set $GITHUB_USER to override $USER'
         exit
     fi
 fi
-homeshick link dotfiles
 
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/vundle
 vim +PluginInstall +qall
