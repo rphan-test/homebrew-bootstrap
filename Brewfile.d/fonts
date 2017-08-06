@@ -1,0 +1,5 @@
+tap "caskroom/fonts"
+cask "font-consolas-for-powerline"
+cask "font-menlo-for-powerline"
+cask "font-meslo-for-powerline"
+cask "font-source-code-pro-for-powerline"

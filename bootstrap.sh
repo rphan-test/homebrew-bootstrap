@@ -1,38 +1,49 @@
 #!/bin/sh
 
-# Install homebrew
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew tap caskroom/cask
-brew tap rphan/bootstrap
+U=${GITHUB_USER:-$USER}
+if ! brew --version; then
+    echo Installing Homebrew
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
 
-# Install Homeschick
-# FIXME - Test for Idempotent-ness
-git clone https://github.com/andsens/homeshick.git $HOME/.homesick/repos/homeshick
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
-source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
-homeshick clone rphan/dotfiles
+brew tap caskroom/cask
+
+BOOTSTRAP="$U/bootstrap"
+if ! brew tap $BOOTSTRAP; then
+    echo "Please fork rphan/bootstrap to $BOOTSTRAP"
+    echo 'You can set $GITHUB_USER to override $USER'
+    exit
+fi
 
 brew restore
-brew restore-cask
-brew restore-apps
+
+export HOMESHICK_DIR=/usr/local/opt/homeshick
+source "$HOMESHICK_DIR/homeshick.sh"
+
+DOTFILES=$U/dotfiles
+if [ ! -d $HOME/.homesick/repos/dotfiles ]; then
+    if ! homeshick clone $DOTFILES; then
+        echo "Please fork rphan/dotfiles to $DOTFILES"
+        echo 'You can set $GITHUB_USER to override $USER'
+        exit
+    fi
+fi
+homeshick link dotfiles
 
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/vundle
 vim +PluginInstall +qall
 
-echo <<EOF
-Launch these once:
-open /usr/local/Caskroom/lastpass/latest/LastPass\ Installer.app
-open /Applications/ShiftIt.app
-open /Applications/Caffeine.app
+cat <<EOF
+Bootstrap is complete.
+Some things may need to be completed by hand.
+Please delete $HOME/.finishing_touces after comleting them.
 
-Set your fonts for iterm to be:
-ASCII 12pt Meslo LG S DZ Regular for Powerline -- +AA
-NON-ASCII 12.2pt Meslo LG S DZ Regular for Powerline -- +AA
-
-Don't forget to edit your chrome settings!!
+Finishing Touches:
 
 # Get rid of all the default crap on the dock
 defaults delete com.apple.dock persistent-apps
 defaults delete com.apple.dock persistent-others
 killall Dock
+
 EOF
+[[ -f $HOME/.finishing_touches ]] && cat $HOME/.finishing_touches

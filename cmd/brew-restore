@@ -1,17 +1,24 @@
 #!/bin/bash
 
-HOMEBREW_STATE=${1:-$HOMEBREW_STATE}         # Set to ARG1 if ARG1
-if [[ ! -f ${HOMEBREW_STATE:=$HOME/.homebrew.state} ]]; then
-    echo Homebrew Statefile: $HOMEBREW_STATE does not exist.
+# Copied from: https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+if ! mas account; then
+    echo '`mas` has issues with fullscreen terminals.  Make sure you are not fullscreen.'
     echo
-    echo USAGE: brew restore [homebrew.state]
-    echo
-    echo If statefile is omitted, \'$HOMEBREW_STATE\' will be used by default.
-    echo You can change this by setting HOMEBREW_STATE
-    echo
+    echo 'If you are not fullscreen, please sign in with `mas` and try again.'
+    echo '$ mas signin --dialog <AppleId>'
     exit
 fi
 
-while read PACKAGE; do
-    [[ ! -z $PACKAGE ]] && brew install $PACKAGE
-done <"$HOMEBREW_STATE"
+LOCAL_BREWFILE="$HOME/.Brewfile.local"
+[[ ! -f $LOCAL_BREWFILE ]] && LOCAL_BREWFILE=""
+
+cat $DIR/../Brewfile.d/* $LOCAL_BREWFILE > $HOME/.Brewfile
+brew bundle --global

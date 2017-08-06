@@ -6,5 +6,5 @@ Don't use this yet.
 
 # Installation
 ```
-$ curl https://raw.githubusercontent.com/rphan/bootstrap/master/bootstrap.sh | bash
+$ curl https://raw.githubusercontent.com/rphan/homebrew-bootstrap/master/bootstrap.sh | bash
 ```

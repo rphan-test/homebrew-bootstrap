@@ -1,0 +1,9 @@
+brew "tmux"
+brew "tree"
+brew "neovim"
+
+cask "caffeine"
+cask "google-chrome"
+cask "iterm2"
+cask "macdown"
+cask "shiftit"
