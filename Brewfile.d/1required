@@ -8,7 +8,6 @@
 tap "caskroom/cask"
 tap "homebrew/bundle"
 tap "homebrew/core"
-tap "rphan/bootstrap"
 
 brew "mas"
 brew "homeshick"
