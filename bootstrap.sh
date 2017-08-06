@@ -16,7 +16,10 @@ if ! brew tap $BOOTSTRAP; then
 fi
 
 # Bootstrapping circular dependency
-[[ ! -z $SKIP_MAS ]] && brew install mas
+[ $SKIP_MAS ]] && brew install mas
+if [ -z ${SKIP_MAS+x} ]; then
+  brew install mas
+fi
 brew restore
 
 export HOMESHICK_DIR=/usr/local/opt/homeshick
